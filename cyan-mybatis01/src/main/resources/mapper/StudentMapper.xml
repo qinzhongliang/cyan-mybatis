@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyan.mapper.StudentMapper">
+
+    <resultMap id="baseResultMap" type="com.cyan.pojo.Student">
+        <id property="id" column="s_id" />
+        <result property="name" column="s_name" />
+    </resultMap>
+
+    <select id="getStudentById" resultMap="baseResultMap" parameterType="int">
+        select * from student where class_id = #{id}
+    </select>
+
+</mapper>

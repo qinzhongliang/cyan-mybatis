@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyan.mapper.UserMapper">
+
+    <sql id="files">
+        id,name,create_time,update_time
+    </sql>
+
+    <select id="selectUserById2" resultType="com.cyan.pojo.User" parameterType="int">
+        select
+        <include refid="files"></include>
+        from user where id = #{id}
+    </select>
+
+    <select id="selectByUser" parameterType="com.cyan.pojo.User" resultType="com.cyan.pojo.User">
+        <bind name="likename" value="'%'+_parameter.getName()+'%'"></bind>
+        select * from user
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="id !=null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="name !=null and name != ''">
+                and name like #{likename}
+            </if>
+        </trim>
+    </select>
+
+    <!--<select id="selectUserListByIds" resultType="com.cyan.pojo.User"-->
+            <!--lang="org.mybatis.scripting.freemarker.FreeMarkerLanguageDriver">-->
+        <!--select * from user-->
+        <!--where  id in (${ids?join(',')})-->
+    <!--</select>-->
+
+    <update id="updateUserById" parameterType="com.cyan.pojo.User">
+        update user
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectUserListByIds" resultType="com.cyan.pojo.User">
+        select * from user
+        <where>
+            <if test="ids != null">
+                id in
+                <foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUserByNameOrId" resultType="com.cyan.pojo.User">
+        select * from user
+        <where>
+            <choose>
+                <when test="id != null">
+                    and id = #{id}
+                </when>
+                <when test="name != null and name != ''">
+                    and name = #{name}
+                </when>
+                <otherwise>
+                    and id in (1,2,3)
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+</mapper>

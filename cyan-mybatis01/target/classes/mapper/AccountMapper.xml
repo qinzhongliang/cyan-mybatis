@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyan.mapper.AccountMapper">
+
+    <select id="selectAccountById" resultType="com.cyan.pojo.Account">
+        select * from account where id = #{id}
+    </select>
+
+    <!-- 嵌套结果映射 -->
+    <resultMap id="accountAndUserResultMap" type="com.cyan.pojo.Account">
+        <id property="id" column="id"/>
+        <association property="user" javaType="com.cyan.pojo.User">
+            <id property="id" column="user_id"/>
+            <result property="name" column="userName"/>
+        </association>
+    </resultMap>
+
+    <select id="getAccountList" resultMap="accountAndUserResultMap">
+        SELECT a.*, u.name userName from account a,user u where a.user_id=u.id
+    </select>
+
+    <!-- 引入外部Select -->
+    <resultMap id="accountAmpUserResultMap" type="com.cyan.pojo.Account">
+        <id property="id" column="id"/>
+        <association property="user" javaType="com.cyan.pojo.User"
+                     select="com.cyan.mapper.UserMapper.selectUserById" column="user_id">
+        </association>
+    </resultMap>
+
+    <select id="selectAccountList" resultMap="accountAmpUserResultMap">
+        SELECT a.*, u.name userName from account a,user u where a.user_id=u.id
+    </select>
+
+</mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyan.mapper.UserMapper1">
+
+    <update id="modifyUserById" parameterType="com.cyan.pojo.User">
+        update t_user set name = #{name},update_time = #{updateTime} where id = #{id}
+    </update>
+
+</mapper>
